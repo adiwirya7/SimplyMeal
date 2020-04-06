@@ -9,10 +9,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class LoginActivity extends AppCompatActivity  {
     private EditText usrEmail, usrPass;
     private Button btn_login, btn_register;
+    private TextView forgotPass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,13 @@ public class LoginActivity extends AppCompatActivity  {
             public void onClick(View v) {
                 Intent regisScreen = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(regisScreen);
+            }
+        });
+        forgotPass = (TextView) findViewById(R.id.forgot_pass);
+        forgotPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
