@@ -37,8 +37,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
+        android:background="@drawable/roundbg"
+        android:drawableStart="@drawable/ic_person"
+        android:drawablePadding="10dp"
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
+        android:padding="10dp"
         android:selectAllOnFocus="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,21 +56,27 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginTop="8dp"
 
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/roundbg"
+        android:drawableStart="@drawable/ic_lock"
+        android:drawablePadding="10dp"
         android:hint="@string/prompt_password"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
+        android:padding="10dp"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_email" />
 
     <TextView
-        android:layout_width="wrap_content"
         android:id="@+id/forgot_pass"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="50dp"
         android:gravity="end"
         android:text="Forgot Password?"
@@ -78,29 +88,31 @@
 
     <Button
         android:id="@+id/btnLogin"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginTop="100dp"
-        android:text="LOGIN"
 
+        android:background="@drawable/roundbg"
+        android:text="LOGIN"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/logo"
-        style="?android:attr/borderlessButtonStyle"
-        />
+        app:layout_constraintTop_toTopOf="@+id/logo" />
 
     <Button
         android:id="@+id/btnRegister"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/roundbg"
         android:text="SIGN UP"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin"
-        app:layout_constraintVertical_bias="0"
-        style="?android:attr/borderlessButtonStyle"/>
+        app:layout_constraintVertical_bias="0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
