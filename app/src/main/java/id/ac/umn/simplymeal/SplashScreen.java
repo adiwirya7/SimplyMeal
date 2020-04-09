@@ -1,6 +1,7 @@
 package id.ac.umn.simplymeal;
 
 import androidx.appcompat.app.AppCompatActivity;
+import id.ac.umn.simplymeal.loginregister.LoginActivity;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,9 +1,9 @@
 package id.ac.umn.simplymeal;
 
 import androidx.appcompat.app.AppCompatActivity;
+import id.ac.umn.simplymeal.loginregister.LoginActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Preferences.clearLoggedInUser(getBaseContext());
-                startActivity(new Intent(getBaseContext(),LoginActivity.class));
+                startActivity(new Intent(getBaseContext(), LoginActivity.class));
                 finish();
             }
         });
