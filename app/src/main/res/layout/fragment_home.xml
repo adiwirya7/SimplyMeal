@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
+    android:layout_height="match_parent">
 
 <!--        <com.synnapps.carouselview.CarouselView-->
 <!--            android:id="@+id/carouselView"-->
@@ -108,7 +107,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:id="@+id/asiancategory">
 
                 <ImageView
                     android:layout_width="60dp"
@@ -132,7 +132,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:id="@+id/indonesiancategory">
 
                 <ImageView
                     android:layout_width="60dp"
@@ -156,7 +157,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:id="@+id/westerncategory">
 
                 <ImageView
                     android:layout_width="60dp"
