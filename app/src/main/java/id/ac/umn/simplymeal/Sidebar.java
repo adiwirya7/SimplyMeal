@@ -18,8 +18,8 @@ public class Sidebar extends AppCompatActivity implements NavigationView.OnNavig
     NavigationView navigationView;    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sidebar_ui);
-        toolbar = findViewById(R.id.MainToolbar);
+//        setContentView(R.layout.sidebar_ui);
+//        toolbar = findViewById(R.id.MainToolbar);
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawer_layout);

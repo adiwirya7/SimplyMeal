@@ -1,9 +1,12 @@
 package id.ac.umn.simplymeal.loginregister;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import id.ac.umn.simplymeal.Preferences;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.util.Pair;
 import id.ac.umn.simplymeal.R;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,22 +14,49 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 
 public class RegisterActivity extends AppCompatActivity {
-    private EditText newusrUsername,newusrEmail, newusrPass, rePass;
-    private Button  btn_register;
-    private TextView back_login;
+
+    private EditText newusrUsername,newusrEmail, newusrPass, rePass,newusrPhone,newusrFirstName, newusrLastName;
+    private FirebaseAuth mAuth;
+    private Button btn_register;
+    private Users userData;
+    private FirebaseDatabase databaseUser;
+    private DatabaseReference refs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        btn_register = (Button) findViewById(R.id.btnRegister);
+        mAuth = FirebaseAuth.getInstance();
+        databaseUser = FirebaseDatabase.getInstance();
+        refs = databaseUser.getReference().child("Users");
+
+        userData = new Users();
+
         newusrUsername = (EditText) findViewById(R.id.register_username);
+        newusrFirstName = (EditText)findViewById(R.id.register_firstName);
+        newusrLastName = (EditText)findViewById(R.id.register_lastName);
         newusrEmail = (EditText) findViewById(R.id.register_email);
         newusrPass = (EditText) findViewById(R.id.register_pass);
+        newusrPhone = (EditText) findViewById(R.id.register_phone);
         rePass = (EditText) findViewById(R.id.register_repass);
         rePass.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -38,7 +68,8 @@ public class RegisterActivity extends AppCompatActivity {
                 return false;
             }
         });
-        back_login = (TextView) findViewById(R.id.back_login);
+
+        btn_register = findViewById(R.id.btnRegister);
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,14 +77,6 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
-        back_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent back = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(back);
-            }
-        });
-
     }
     private  void sharedStore(){
         newusrUsername.setError(null);
@@ -63,25 +86,31 @@ public class RegisterActivity extends AppCompatActivity {
         View fokus = null;
         boolean cancel = false;
 
-        String newUsernm = newusrUsername.getText().toString();
-        String newEmail = newusrEmail.getText().toString();
-        String newPass = newusrPass.getText().toString();
+       final String newUsernm = newusrUsername.getText().toString();
+        final String newEmail = newusrEmail.getText().toString();
+        final String newFirstName = newusrFirstName.getText().toString();
+        final String newLastName = newusrLastName.getText().toString();
+        final String newNumber = newusrPhone.getText().toString();
+        final String newPass = newusrPass.getText().toString();
         String rePassword = rePass.getText().toString();
-        if(TextUtils.isEmpty(newUsernm)){
-            newusrUsername.setError("This Field is required!");
-        }
-        else if (cekUser(newUsernm)){
-            newusrUsername.setError("This Username is already exist!");
-            fokus = newusrUsername;
-            cancel = true;
-        }
+
 
         if(TextUtils.isEmpty(newEmail)){
             newusrEmail.setError("This Field is required!");
+
         }
         else if (cekEmail(newEmail)){
-            newusrEmail.setError("This Email is already exist!");
+            newusrEmail.setError("This Email  is already exist!");
             fokus = newusrEmail;
+            cancel = true;
+        }
+        if(TextUtils.isEmpty(newUsernm)){
+            newusrUsername.setError("This Field is required!");
+
+        }
+        else if (cekUserName(newUsernm)){
+            newusrUsername.setError("This Email  is already exist!");
+            fokus = newusrUsername;
             cancel = true;
         }
 
@@ -98,13 +127,26 @@ public class RegisterActivity extends AppCompatActivity {
             fokus.requestFocus();
         }
         else{
-            Preferences.setRegisteredUser(getBaseContext(),newUsernm);
-            Preferences.setRegisteredEmail(getBaseContext(),newEmail);
-            Preferences.setRegisteredPass(getBaseContext(),newPass);
-            Intent homeScreen = new Intent(RegisterActivity.this, LoginActivity.class);
+            mAuth.createUserWithEmailAndPassword(newEmail,newPass).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(!task.isSuccessful()){
+                        Toast.makeText(RegisterActivity.this, "SignUp Unsuccessful", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Intent loginScreen = new Intent(RegisterActivity.this, LoginActivity.class);
+                         userData.setEmailUser(newEmail);
+                         userData.setUserName(newUsernm);
+                         userData.setFirstName(newFirstName);
+                         userData.setLastName(newLastName);
+                         userData.setPassUser(newPass);
+                         refs.child(newUsernm).setValue(userData);
+                         startActivity(loginScreen);
+                    }
+                }
+            });
 
-            finish();
-            startActivity(homeScreen);
+
         }
 
 //        SharedPreferences.Editor editor = pref.edit();
@@ -117,15 +159,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean cekEmail(String newEmail) {
-        return newEmail.equals(Preferences.getRegisteredEmail(getBaseContext()));
+        return newEmail.equals(mAuth.getCurrentUser().getEmail());
     }
-
+    private boolean cekUserName(String newUserName) {
+        return newUserName.equals(mAuth.getCurrentUser().getEmail());
+    }
     private boolean cekPass(String newPass, String rePassword) {
         return newPass.equals(rePassword);
-    }
-
-    private boolean cekUser(String newUsernm) {
-        return newUsernm.equals(Preferences.getRegisteredUser(getBaseContext()));
     }
 
 

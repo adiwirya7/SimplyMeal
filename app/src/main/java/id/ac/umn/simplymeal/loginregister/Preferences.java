@@ -1,4 +1,4 @@
-package id.ac.umn.simplymeal;
+package id.ac.umn.simplymeal.loginregister;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,32 +15,32 @@ public class Preferences {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public static void setRegisteredUser(Context context, String username){
-        SharedPreferences.Editor editor = getSharedPreference(context).edit();
-        editor.putString(KEY_USER_TEREGISTER, username);
-        editor.apply();
-    }
-    public static String getRegisteredUser(Context context){
-        return getSharedPreference(context).getString(KEY_USER_TEREGISTER,"");
-    }
-
-    public static void setRegisteredEmail(Context context, String email){
-        SharedPreferences.Editor editor = getSharedPreference(context).edit();
-        editor.putString(KEY_EMAIL_TEREGISTER, email);
-        editor.apply();
-    }
-    public static String getRegisteredEmail(Context context){
-        return getSharedPreference(context).getString(KEY_EMAIL_TEREGISTER,"");
-    }
-    public static void setRegisteredPass(Context context, String password){
-        SharedPreferences.Editor editor = getSharedPreference(context).edit();
-        editor.putString(KEY_PASS_TEREGISTER, password);
-        editor.apply();
-    }
-    /** Mengembalikan nilai dari key KEY_PASS_TEREGISTER berupa String */
-    public static String getRegisteredPass(Context context){
-        return getSharedPreference(context).getString(KEY_PASS_TEREGISTER,"");
-    }
+//    public static void setRegisteredUser(Context context, String username){
+//        SharedPreferences.Editor editor = getSharedPreference(context).edit();
+//        editor.putString(KEY_USER_TEREGISTER, username);
+//        editor.apply();
+//    }
+//    public static String getRegisteredUser(Context context){
+//        return getSharedPreference(context).getString(KEY_USER_TEREGISTER,"");
+//    }
+//
+//    public static void setRegisteredEmail(Context context, String email){
+//        SharedPreferences.Editor editor = getSharedPreference(context).edit();
+//        editor.putString(KEY_EMAIL_TEREGISTER, email);
+//        editor.apply();
+//    }
+//    public static String getRegisteredEmail(Context context){
+//        return getSharedPreference(context).getString(KEY_EMAIL_TEREGISTER,"");
+//    }
+//    public static void setRegisteredPass(Context context, String password){
+//        SharedPreferences.Editor editor = getSharedPreference(context).edit();
+//        editor.putString(KEY_PASS_TEREGISTER, password);
+//        editor.apply();
+//    }
+//    /** Mengembalikan nilai dari key KEY_PASS_TEREGISTER berupa String */
+//    public static String getRegisteredPass(Context context){
+//        return getSharedPreference(context).getString(KEY_PASS_TEREGISTER,"");
+//    }
 
     public static void setLoggedInUser(Context context, String email, String user){
         SharedPreferences.Editor editor = getSharedPreference(context).edit();

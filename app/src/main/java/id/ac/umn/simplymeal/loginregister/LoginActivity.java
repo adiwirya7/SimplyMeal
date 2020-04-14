@@ -1,8 +1,9 @@
 package id.ac.umn.simplymeal.loginregister;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import id.ac.umn.simplymeal.MainActivity;
-import id.ac.umn.simplymeal.Preferences;
 import id.ac.umn.simplymeal.R;
 
 import android.content.Intent;
@@ -12,20 +13,46 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity  {
-    private EditText usrEmail, usrPass;
+    private EditText usrEmail, usrPass,usrName;
     private Button btn_login, btn_register;
     private TextView forgotPass;
+    private DatabaseReference refs;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private Users user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        user = new Users();
+        refs = FirebaseDatabase.getInstance().getReference().child("Users");
+        mAuth = FirebaseAuth.getInstance();
         usrEmail = (EditText)findViewById(R.id.login_email);
         usrPass = (EditText)findViewById(R.id.login_pass);
+        usrName = (EditText)findViewById(R.id.login_userName);
+
         btn_login =  (Button)findViewById(R.id.btnLogin);
         btn_register =  (Button)findViewById(R.id.btnRegister);
+
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,15 +71,17 @@ public class LoginActivity extends AppCompatActivity  {
         forgotPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent forgotScreen = new Intent(LoginActivity.this, ForgotPassActivity.class);
+                startActivity(forgotScreen);
             }
         });
+
     }
 
     private void sharedStore() {
 
-
         usrEmail.setError(null);
+
         usrPass.setError(null);
         View fokus = null;
         boolean cancel = false;
@@ -60,14 +89,11 @@ public class LoginActivity extends AppCompatActivity  {
         
         String email = usrEmail.getText().toString();
         String pass = usrPass.getText().toString();
-        
+        String userName = usrName.getText().toString();
+        String cekEmail="", cekPass= "";
         if (TextUtils.isEmpty(email)){
             usrEmail.setError("This field is required");
             fokus =  usrEmail;
-            cancel = true;
-        }else if(!cekUser(email)){
-            usrEmail.setError("This Email is not found");
-            fokus = usrEmail;
             cancel = true;
         }
 
@@ -75,31 +101,32 @@ public class LoginActivity extends AppCompatActivity  {
             usrPass.setError("This field is required");
             fokus = usrPass;
             cancel = true;
-        }else if (!cekPassword(pass)){
-            usrPass.setError("This password is incorrect");
-            fokus = usrPass;
-            cancel = true;
         }
 
         if (cancel) fokus.requestFocus();
-        else homeScreen();
+        else homeScreen(email, userName, pass);
 
     }
 
-    private void homeScreen() {
-        Preferences.setLoggedInUser(getBaseContext(),Preferences.getRegisteredEmail(getBaseContext()), Preferences.getRegisteredUser(getBaseContext()));
-        Preferences.setLoggedInStatus(getBaseContext(),true);
-        startActivity(new Intent(getBaseContext(), MainActivity.class));
-        finish();
+    private void homeScreen(final String email, final String userName, final String pass) {
+
+        mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(!task.isSuccessful()){
+                    Toast.makeText(LoginActivity.this, "Login Error, Please Login Again", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Preferences.setLoggedInUser(getBaseContext(),email, userName);
+                    Preferences.setLoggedInStatus(getBaseContext(),true);
+                    finish();
+                    startActivity(new Intent(getBaseContext(), MainActivity.class));
+                }
+            }
+        });
+
     }
 
-    private boolean cekPassword(String pass) {
-       return pass.equals(Preferences.getRegisteredPass(getBaseContext()));
-    }
-
-    private boolean cekUser(String email) {
-        return email.equals(Preferences.getRegisteredEmail(getBaseContext()));
-    }
 
 
 }
