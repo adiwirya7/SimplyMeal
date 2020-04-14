@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".SplashScreen"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"></activity>
         <activity android:name=".Carousel">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,15 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".loginregister.RegisterActivity" />
-<<<<<<< HEAD
         <activity android:name=".loginregister.LoginActivity" />
-=======
-        <activity android:name=".loginregister.LoginActivity"/>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SplashScreen" />
         <activity android:name=".Sidebar" />
-
->>>>>>> e6b1aa5223ce9ba34358bca92ec88bdffee60906
     </application>
 
 </manifest>
