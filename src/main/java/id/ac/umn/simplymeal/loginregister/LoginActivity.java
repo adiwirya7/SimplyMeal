@@ -1,0 +1,132 @@
+package id.ac.umn.simplymeal.loginregister;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import id.ac.umn.simplymeal.MainActivity;
+import id.ac.umn.simplymeal.R;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+public class LoginActivity extends AppCompatActivity  {
+    private EditText usrEmail, usrPass,usrName;
+    private Button btn_login, btn_register;
+    private TextView forgotPass;
+    private DatabaseReference refs;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private Users user;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        user = new Users();
+        refs = FirebaseDatabase.getInstance().getReference().child("Users");
+        mAuth = FirebaseAuth.getInstance();
+        usrEmail = (EditText)findViewById(R.id.login_email);
+        usrPass = (EditText)findViewById(R.id.login_pass);
+        usrName = (EditText)findViewById(R.id.login_userName);
+
+        btn_login =  (Button)findViewById(R.id.btnLogin);
+        btn_register =  (Button)findViewById(R.id.btnRegister);
+
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedStore();
+
+            }
+        });
+        btn_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent regisScreen = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(regisScreen);
+            }
+        });
+        forgotPass = (TextView) findViewById(R.id.forgot_pass);
+        forgotPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent forgotScreen = new Intent(LoginActivity.this, ForgotPassActivity.class);
+                startActivity(forgotScreen);
+            }
+        });
+
+    }
+
+    private void sharedStore() {
+
+        usrEmail.setError(null);
+
+        usrPass.setError(null);
+        View fokus = null;
+        boolean cancel = false;
+
+        
+        String email = usrEmail.getText().toString();
+        String pass = usrPass.getText().toString();
+        String userName = usrName.getText().toString();
+        String cekEmail="", cekPass= "";
+        if (TextUtils.isEmpty(email)){
+            usrEmail.setError("This field is required");
+            fokus =  usrEmail;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(pass)){
+            usrPass.setError("This field is required");
+            fokus = usrPass;
+            cancel = true;
+        }
+
+        if (cancel) fokus.requestFocus();
+        else homeScreen(email, userName, pass);
+
+    }
+
+    private void homeScreen(final String email, final String userName, final String pass) {
+
+        mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(!task.isSuccessful()){
+                    Toast.makeText(LoginActivity.this, "Login Error, Please Login Again", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Preferences.setLoggedInUser(getBaseContext(),email, userName);
+                    Preferences.setLoggedInStatus(getBaseContext(),true);
+                    finish();
+                    startActivity(new Intent(getBaseContext(), MainActivity.class));
+                }
+            }
+        });
+
+    }
+
+
+
+}
