@@ -2,17 +2,16 @@ package id.ac.umn.simplymeal;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.fragment.app.Fragment;
+
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
-
-import androidx.fragment.app.Fragment;
 
 public class HomeFragment extends Fragment {
     public HomeFragment() {
@@ -32,7 +31,6 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,8 +62,8 @@ public class HomeFragment extends Fragment {
         western_category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentwesterncategory = new Intent(getActivity(), WesternCategory.class);
-                startActivity(intentwesterncategory);
+//                Intent intentwesterncategory = new Intent(getActivity(), WesternCategory.class);
+//                startActivity(intentwesterncategory);
             }
         });
 

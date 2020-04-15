@@ -1,12 +1,5 @@
 package id.ac.umn.simplymeal.loginregister;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.util.Pair;
-import id.ac.umn.simplymeal.R;
-
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,22 +7,21 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import id.ac.umn.simplymeal.R;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -78,6 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
     private  void sharedStore(){
         newusrUsername.setError(null);
         newusrEmail.setError(null);
@@ -86,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         View fokus = null;
         boolean cancel = false;
 
-       final String newUsernm = newusrUsername.getText().toString();
+        final String newUsernm = newusrUsername.getText().toString();
         final String newEmail = newusrEmail.getText().toString();
         final String newFirstName = newusrFirstName.getText().toString();
         final String newLastName = newusrLastName.getText().toString();
@@ -97,31 +90,30 @@ public class RegisterActivity extends AppCompatActivity {
 
         if(TextUtils.isEmpty(newEmail)){
             newusrEmail.setError("This Field is required!");
-
         }
-        else if (cekEmail(newEmail)){
-            newusrEmail.setError("This Email  is already exist!");
-            fokus = newusrEmail;
-            cancel = true;
-        }
-        if(TextUtils.isEmpty(newUsernm)){
-            newusrUsername.setError("This Field is required!");
-
-        }
-        else if (cekUserName(newUsernm)){
-            newusrUsername.setError("This Email  is already exist!");
-            fokus = newusrUsername;
-            cancel = true;
-        }
-
-        if(TextUtils.isEmpty(newPass)){
-            newusrPass.setError("This Field is required!");
-        }
-        else if (!cekPass(newPass,rePassword)){
-            newusrPass.setError("This Password is Incorrect!");
-            fokus = newusrPass;
-            cancel = true;
-        }
+//        else if (cekEmail(newEmail)){
+//            newusrEmail.setError("This Email  is already exist!");
+//            fokus = newusrEmail;
+//            cancel = true;
+//        }
+//        if(TextUtils.isEmpty(newUsernm)){
+//            newusrUsername.setError("This Field is required!");
+//
+//        }
+//        else if (cekUserName(newUsernm)){
+//            newusrUsername.setError("This Email  is already exist!");
+//            fokus = newusrUsername;
+//            cancel = true;
+//        }
+//
+//        if(TextUtils.isEmpty(newPass)){
+//            newusrPass.setError("This Field is required!");
+//        }
+//        else if (!cekPass(newPass,rePassword)){
+//            newusrPass.setError("This Password is Incorrect!");
+//            fokus = newusrPass;
+//            cancel = true;
+//        }
 
         if(cancel){
             fokus.requestFocus();
@@ -135,13 +127,19 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     else{
                         Intent loginScreen = new Intent(RegisterActivity.this, LoginActivity.class);
-                         userData.setEmailUser(newEmail);
-                         userData.setUserName(newUsernm);
-                         userData.setFirstName(newFirstName);
-                         userData.setLastName(newLastName);
-                         userData.setPassUser(newPass);
-                         refs.child(newUsernm).setValue(userData);
-                         startActivity(loginScreen);
+                        userData.setEmailUser(newEmail);
+                        userData.setUserName(newUsernm);
+                        userData.setFirstName(newFirstName);
+                        userData.setLastName(newLastName);
+                        userData.setPassUser(newPass);
+                        userData.setPhoneNumber(newNumber);
+                        userData.setImage("");
+                        userData.setAddress("");
+                        userData.setBirthOfDate("");
+                        userData.setGender("");
+
+                        refs.child(newUsernm).setValue(userData);
+                        startActivity(loginScreen);
                     }
                 }
             });
@@ -170,3 +168,4 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 }
+
