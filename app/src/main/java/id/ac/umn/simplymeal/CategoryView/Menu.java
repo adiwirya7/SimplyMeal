@@ -1,14 +1,18 @@
-package id.ac.umn.simplymeal;
+package id.ac.umn.simplymeal.CategoryView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Menu {
     private String menuName;
-    private String[] imageMenu = new String[2];
+    private Map<String, Object> imageMenu ;
     private String category;
     private String idMenu;
-    private String[] idIngredient = new String[30];
-    private String[] idPortion = new String[2];
+    private  Map<String, Object> idIngredient;
+    private Map<String, Object> idPortion;
 
-    public Menu(String menuName, String[] imageMenu, String category, String idMenu, String[] idIngredient, String[] idPortion) {
+    public Menu(String menuName, String idMenu,  Map<String, Object> imageMenu, String category, Map<String, Object> idIngredient, Map<String, Object> idPortion) {
         this.menuName = menuName;
         this.imageMenu = imageMenu;
         this.category = category;
@@ -29,11 +33,11 @@ public class Menu {
         this.menuName = menuName;
     }
 
-    public String[] getImageMenu() {
+    public  Map<String, Object> getImageMenu() {
         return imageMenu;
     }
 
-    public void setImageMenu(String[] imageMenu) {
+    public void setImageMenu( Map<String, Object> imageMenu) {
         this.imageMenu = imageMenu;
     }
 
@@ -53,19 +57,19 @@ public class Menu {
         this.idMenu = idMenu;
     }
 
-    public String[] getIdIngredient() {
+    public  Map<String, Object> getIdIngredient() {
         return idIngredient;
     }
 
-    public void setIdIngredient(String[] idIngredient) {
+    public void setIdIngredient(Map<String, Object> idIngredient) {
         this.idIngredient = idIngredient;
     }
 
-    public String[] getIdPortion() {
+    public  Map<String, Object> getIdPortion() {
         return idPortion;
     }
 
-    public void setIdPortion(String[] idPortion) {
+    public void setIdPortion( Map<String, Object> idPortion) {
         this.idPortion = idPortion;
     }
 }

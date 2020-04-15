@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
-            <include android:id="@+id/toolbar" layout="@layout/header"/>
+
             <!--     Main content -->
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottom_navigation"
@@ -32,20 +32,23 @@
                 android:id="@+id/frame_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="52dp"
-                />
+
+                 />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-        <com.google.android.material.navigation.NavigationView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:menu="@menu/sidebar_menu"
-            android:id="@+id/nav_view"
-            android:layout_gravity="start"
-            app:headerLayout="@layout/sidebar">
+            <com.google.android.material.navigation.NavigationView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:menu="@menu/sidebar_menu"
+                android:id="@+id/nav_view"
+                android:layout_gravity="start"
+                app:headerLayout="@layout/sidebar">
 
-        </com.google.android.material.navigation.NavigationView>
+            </com.google.android.material.navigation.NavigationView>
     </androidx.drawerlayout.widget.DrawerLayout>
 
 </LinearLayout>
+
+
+
