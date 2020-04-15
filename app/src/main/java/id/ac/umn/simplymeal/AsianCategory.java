@@ -2,16 +2,11 @@ package id.ac.umn.simplymeal;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
-import android.widget.Adapter;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import java.util.ArrayList;
-
 import id.ac.umn.simplymeal.CategoryView.AdapterCardView;
 
 public class AsianCategory extends AppCompatActivity {
@@ -37,9 +32,16 @@ public class AsianCategory extends AppCompatActivity {
         menus.add("First Cardview items");
         menus.add("Second Cardview items");
         menus.add("Third Cardview items");
+        menus.add("Third Cardview items");
+        menus.add("Third Cardview items");
+        menus.add("Third Cardview items");
+        menus.add("Third Cardview items");
+        menus.add("Third Cardview items");
+        menus.add("Third Cardview items");
+        menus.add("Third Cardview items");
 
         recyclerView = findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         adapter = new AdapterCardView(this, menus);
         recyclerView.setAdapter(adapter);
     }
