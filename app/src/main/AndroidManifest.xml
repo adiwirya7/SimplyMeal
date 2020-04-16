@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,7 +15,7 @@
         <activity
             android:name=".CategoryView.DetailMenu_Asian"
             android:label="Detail Menu"
-            android:parentActivityName=".AsianCategory"></activity>
+            android:parentActivityName=".AsianCategory"/>
         <activity
             android:name=".WesternCategory"
             android:label="Western Dishes"
@@ -25,20 +24,23 @@
             android:name=".AsianCategory"
             android:label="Asian Dishes"
             android:parentActivityName=".MainActivity" />
+
+
         <activity
-            android:name=".IndonesianCategory"
+            android:name=".CategoryView.MenuListActivity"
             android:label="Indonesian Dishes"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".loginregister.ForgotPassActivity" />
-        <activity android:name=".SplashScreen" />
-        <activity android:name=".loginregister.RegisterActivity" />
-        <activity android:name=".loginregister.LoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".loginregister.RegisterActivity" />
+        <activity android:name=".loginregister.LoginActivity" />
+        <activity android:name=".MainActivity" />
     </application>
+
 </manifest>
