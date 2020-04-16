@@ -4,20 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login_bg"
     tools:context=".loginregister.RegisterActivity">
 
-        <ImageView
-            android:id="@+id/background1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_1"
-            android:scaleType="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+
 
         <ImageView
             android:id="@+id/logo1"
@@ -62,6 +52,7 @@
 
         <EditText
             android:id="@+id/register_email"
+            android:drawableRight="@drawable/ic_email_black_24dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
@@ -74,6 +65,7 @@
             />
         <EditText
             android:id="@+id/register_username"
+            android:drawableRight="@drawable/ic_person"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
@@ -90,6 +82,7 @@
             android:layout_marginStart="50dp"
             android:layout_marginEnd="50dp"
             android:hint="Phone Number"
+            android:drawableRight="@drawable/ic_call_black_24dp"
             android:inputType="phone"
             android:singleLine="true"
             android:maxLength="11"
@@ -97,35 +90,66 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_username" />
-        <EditText
-            android:id="@+id/register_pass"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInput"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleDrawable="@drawable/ic_hide"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="50dp"
-            android:hint="@string/prompt_password"
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/register_phone" >
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/register_pass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_password"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:selectAllOnFocus="true"
+                   />
+        </com.google.android.material.textfield.TextInputLayout>
+        <EditText
+            android:id="@+id/register_phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:hint="Phone Number"
+            android:drawableRight="@drawable/ic_call_black_24dp"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:maxLength="11"
+            android:selectAllOnFocus="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/register_username" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInput1"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleDrawable="@drawable/ic_hide"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInput" >
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/register_repass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Confirm Password"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:selectAllOnFocus="true"
+                    />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_phone" />
-        <EditText
-            android:id="@+id/register_repass"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
-            android:hint="Confirm Password"
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_pass" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -138,7 +162,7 @@
             android:textColor="#0000FF"
             app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_repass"
+            app:layout_constraintTop_toBottomOf="@+id/textInput1"
             app:layout_constraintVertical_bias="0" />
         <Button
             android:id="@+id/btnRegister"

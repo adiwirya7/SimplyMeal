@@ -1,5 +1,11 @@
 package id.ac.umn.simplymeal.loginregister;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import id.ac.umn.simplymeal.MainActivity;
+import id.ac.umn.simplymeal.R;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,19 +14,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.view.LayoutInflater;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import id.ac.umn.simplymeal.MainActivity;
-import id.ac.umn.simplymeal.R;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity  {
     private EditText usrEmail, usrPass,usrName;
@@ -30,7 +38,6 @@ public class LoginActivity extends AppCompatActivity  {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private Users user;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +67,6 @@ public class LoginActivity extends AppCompatActivity  {
                 startActivity(regisScreen);
             }
         });
-
         forgotPass = (TextView) findViewById(R.id.forgot_pass);
         forgotPass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,10 +81,12 @@ public class LoginActivity extends AppCompatActivity  {
     private void sharedStore() {
 
         usrEmail.setError(null);
+
         usrPass.setError(null);
         View fokus = null;
         boolean cancel = false;
 
+        
         String email = usrEmail.getText().toString();
         String pass = usrPass.getText().toString();
         String userName = usrName.getText().toString();
@@ -116,5 +124,9 @@ public class LoginActivity extends AppCompatActivity  {
                 }
             }
         });
+
     }
+
+
+
 }

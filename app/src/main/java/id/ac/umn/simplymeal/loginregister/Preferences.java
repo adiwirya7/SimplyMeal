@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class Preferences {
-    static final String KEY_USER_TEREGISTER ="usernm",KEY_EMAIL_TEREGISTER = "email", KEY_PASS_TEREGISTER ="pass";
+//    static final String KEY_USER_TEREGISTER ="usernm",KEY_EMAIL_TEREGISTER = "email", KEY_PASS_TEREGISTER ="pass";
     static final String KEY_USERNAME_SEDANG_LOGIN = "Username_logged_in";
     static final String KEY_EMAIL_SEDANG_LOGIN = "Email_logged_in";
     static final String KEY_STATUS_SEDANG_LOGIN = "Status_logged_in";

@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:background="#F1EDED"
     tools:context=".AccountFragment">
+    <include android:id="@+id/toolbar" layout="@layout/header"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

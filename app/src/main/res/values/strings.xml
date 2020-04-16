@@ -15,5 +15,7 @@
 
     <string name="openNavDrawer">Navigation Drawer Open</string>
     <string name="closeNavDrawer">Navigation Drawer Close</string>
+    <string name="search_your_recipes">Search Your Recipes..</string>
+    <string name="meal_categories">Meal Categories</string>
 
 </resources>

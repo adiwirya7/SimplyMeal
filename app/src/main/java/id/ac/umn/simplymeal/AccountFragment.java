@@ -20,11 +20,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -51,29 +53,31 @@ import java.util.HashMap;
 
 import id.ac.umn.simplymeal.loginregister.LoginActivity;
 import id.ac.umn.simplymeal.loginregister.Preferences;
+import id.ac.umn.simplymeal.loginregister.Users;
 
 import static android.app.Activity.RESULT_OK;
 import static com.google.firebase.storage.FirebaseStorage.getInstance;
 
+
 public class AccountFragment extends Fragment {
+    private TextView infoUsr;
+    private Button logOut, btn_login;
+    private ConstraintLayout toLoginScreen;
+    private RelativeLayout profileScreen;
+    private BottomNavigationView navigation;
+    private ImageView imgProfile;
+    FloatingActionButton fab;
+    ProgressDialog pd;
+    Context context;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
-    FirebaseDatabase firebaseDatabase;
+
     DatabaseReference databaseReference;
 
     //storage
     StorageReference storageReference;
     //Path buat save image
     String storagePath = "Users_Profile_Image/";
-
-    private TextView infoUsr;
-    private BottomNavigationView navigation;
-
-    private ImageView imgProfile;
-    FloatingActionButton fab;
-    ProgressDialog pd;
-    Context context;
-
     //permission
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final int STORAGE_REQUEST_CODE = 200;
@@ -82,30 +86,30 @@ public class AccountFragment extends Fragment {
     String[] cameraPermissions;
     String storagePermissions[];
 
-    //uri of image
     Uri image_uri;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //initialize firebase
+        View view;
+        final Context context = getContext();
+
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Users");
+
+        databaseReference =FirebaseDatabase.getInstance().getReference().child("Users");
         storageReference = getInstance().getReference();
 
-        Log.e("a", "a" + firebaseAuth.getCurrentUser());
+        //loginScreen = view.findViewById(R.id.btnLoginScreen);
 
-        if(firebaseAuth.getCurrentUser() != null) {
-            //Init permission
-            cameraPermissions = new String[] {
-                    Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
-            storagePermissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
-            View view = inflater.inflate(R.layout.fragment_account, container, false);
 
-            //Initialize views
+
+
+        //Get info according to currently signed user
+        Log.i("Data",Preferences.getLoggedInUser(context));
+        if(firebaseAuth.getCurrentUser() != null && (Preferences.getLoggedInStatus(context) == true)) {
+            view = inflater.inflate(R.layout.fragment_account, container, false);
+
             imgProfile = view.findViewById(R.id.myPict);
             final TextView name = view.findViewById(R.id.name);
             TextView birthOfDate = view.findViewById(R.id.birth);
@@ -113,38 +117,46 @@ public class AccountFragment extends Fragment {
             TextView gender = view.findViewById(R.id.gender);
             TextView phoneNumber = view.findViewById(R.id.noHp);
             final TextView email = view.findViewById(R.id.email);
-
             fab = view.findViewById(R.id.fab);
             pd = new ProgressDialog(getActivity());
-            context = view.getContext();
+            logOut = view.findViewById(R.id.btnLogout);
 
-            //Get info according to currently signed user
-            Query query = databaseReference.child(Preferences.getLoggedInUser(context));
 
-            query.addValueEventListener(new ValueEventListener() {
+            cameraPermissions = new String[] {
+                    Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+            storagePermissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+            final String userName = Preferences.getLoggedInUser(context);
+
+
+            databaseReference.child(userName).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     //check until required data
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if(dataSnapshot.exists()){
                         //Get data
-                        String nama = "" + ds.child("firstName").getValue() + " " + ds.child(
-                                "lastName").getValue();
-                        String emails = "" + ds.child("emailUser").getValue();
-                        String image = "" + ds.child("image").getValue();
+                        String nama = String.valueOf(dataSnapshot.child("firstName").getValue() + " " + dataSnapshot.child(
+                                    "lastName").getValue());
+                        String emails = "" + dataSnapshot.child("emailUser").getValue();
+                        String image = "" + dataSnapshot.child("image").getValue();
 
-                        //Set data
+                            //Set data
                         name.setText(nama);
                         email.setText(emails);
 
                         try {
-                            //jika ada image
+                                //jika ada image
                             Log.e("c", "onDataChange: abcde");
                             Picasso.get().load(image).into(imgProfile);
                         } catch (Exception e) {
-                            //jika gaada image -> set default
+                                //jika gaada image -> set default
                             Picasso.get().load(R.drawable.ic_person).into(imgProfile);
                         }
+
                     }
+                    else{
+                        Log.i("noData","Gak ada data");
+                    }
+
                 }
 
                 @Override
@@ -159,7 +171,7 @@ public class AccountFragment extends Fragment {
                     showEditProfileDialog();
                 }
             });
-            Button logOut = view.findViewById(R.id.btnLogout);
+
 
             logOut.setOnClickListener(new View.OnClickListener() {
 
@@ -167,30 +179,25 @@ public class AccountFragment extends Fragment {
                 public void onClick(View v) {
                     FirebaseAuth.getInstance().signOut();
                     Preferences.clearLoggedInUser(context);
-                    HomeFragment fragment1 = new HomeFragment();
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frame_container, fragment1);
-                    fragmentTransaction.commit();
+                    startActivity(new Intent(context, LoginActivity.class));
                     getActivity().finish();
                 }
             });
-            return view;
         }
         else{
-            View view = inflater.inflate(R.layout.fragment_noaccount, container, false);
-            Button login = view.findViewById(R.id.btnLogin);
+            view = inflater.inflate(R.layout.fragment_noaccount, container, false);
 
-            login.setOnClickListener(new View.OnClickListener() {
-
+            btn_login = view.findViewById(R.id.btnLogin);
+            btn_login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity().getApplication(), LoginActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(context, LoginActivity.class));
+                    getActivity().finish();
                 }
-            });
-            return view;
+          });
         }
+
+        return view;
     }
 
     public boolean checkStoragePermission(){
@@ -251,10 +258,7 @@ public class AccountFragment extends Fragment {
         linearLayout.addView(editText);
 
         builder.setView(linearLayout);
-
-        //add buttons in dialog untuk update
         builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-            @Override
             public void onClick(DialogInterface dialog, int which) {
                 String value = editText.getText().toString().trim();
                 if(!TextUtils.isEmpty(value)){
@@ -263,25 +267,25 @@ public class AccountFragment extends Fragment {
                     result.put(key, value);
 
                     databaseReference.child(user.getUid()).updateChildren(result)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                pd.dismiss();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                pd.dismiss();
-                                Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    pd.dismiss();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    pd.dismiss();
+                                    Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 }
                 else{
                     Toast.makeText(getActivity(), "Please Enter Name", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+         });
         builder.setNegativeButton("Update", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -372,55 +376,56 @@ public class AccountFragment extends Fragment {
         String filePathAndName = storagePath + "_" + user.getUid();
         StorageReference storageReference2nd = storageReference.child(filePathAndName);
         storageReference2nd.putFile(uri)
-            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    //upload image
-                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                    while(!uriTask.isSuccessful()){
-                        Uri downloadUri = uriTask.getResult();
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        //upload image
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while(!uriTask.isSuccessful()){
+                            Uri downloadUri = uriTask.getResult();
 
-                        //check ke upload atau ngga
-                        if(uriTask.isSuccessful()) {
-                            //Image uploaded
-                            HashMap<String, Object> results = new HashMap<>();
-                            String image = "image";
-                            results.put(image, downloadUri.toString());
+                            //check ke upload atau ngga
+                            if(uriTask.isSuccessful()) {
+                                //Image uploaded
+                                HashMap<String, Object> results = new HashMap<>();
+                                String image = "image";
+                                results.put(image, downloadUri.toString());
 
-                            databaseReference.child(user.getUid()).updateChildren(results)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            pd.dismiss();
-                                            Toast.makeText(getActivity(), "Image Updated...",
-                                                    Toast.LENGTH_SHORT).show();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            pd.dismiss();
-                                            Toast.makeText(getActivity(), "Error Updating Image.." +
-                                                    ".", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        }
-                        else{
-                            //error
-                            pd.dismiss();
-                            Toast.makeText(getActivity(), "Some error occured",
-                                    Toast.LENGTH_SHORT).show();
+                                databaseReference.child(user.getUid()).updateChildren(results)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                pd.dismiss();
+                                                Toast.makeText(getActivity(), "Image Updated...",
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                pd.dismiss();
+                                                Toast.makeText(getActivity(), "Error Updating Image.." +
+                                                        ".", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                            else{
+                                //error
+                                pd.dismiss();
+                                Toast.makeText(getActivity(), "Some error occured",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    pd.dismiss();
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 
     private void pickFromCamera() {
@@ -441,5 +446,8 @@ public class AccountFragment extends Fragment {
         galleryIntent.setType("image/*");
         startActivityForResult(galleryIntent, IMAGE_PICK_GALLERY_CODE);
     }
+
+
+
 }
 
