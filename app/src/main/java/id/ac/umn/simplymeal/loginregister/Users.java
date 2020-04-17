@@ -12,7 +12,8 @@ public class Users {
 
     }
 
-    public Users(String userName, String emailUser, String passUser, Integer phoneUser, String firstName, String lastName){
+    public Users(String userName, String emailUser, String passUser, Integer phoneUser,
+                 String firstName, String lastName){
         this.userName = userName;
         this.emailUser = emailUser;
         this.passUser = passUser;
@@ -20,6 +21,12 @@ public class Users {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
+//    public Users(String firstName, String lastName) {
+//
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//    }
 
     public String getUserName() {
         return userName;
